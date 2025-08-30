@@ -4,6 +4,8 @@ import { PrismaContext } from './prismaContext.js';
 import { PostType } from './postType.js';
 import { UUIDType } from './uuid.js';
 import { UUID } from 'crypto';
+import { UserType } from './userType.js';
+import { ProfileType } from './profileType.js';
 
 export const RootQueryType = new GraphQLObjectType({
   name: 'RootQueryType',
@@ -32,6 +34,30 @@ export const RootQueryType = new GraphQLObjectType({
       args: { id: { type: new GraphQLNonNull(UUIDType) } },
       resolve: (_, args: { id: UUID }, context: PrismaContext) => {
         return context.prisma.post.findUnique({ where: { id: args.id } });
+      },
+    },
+    users: {
+      type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(UserType))),
+      resolve: (_, _args, context: PrismaContext) => {
+        return context.prisma.user.findMany();
+      },
+    },
+    user: {
+      type: new GraphQLNonNull(UserType),
+      resolve: (_, args: { id: UUID }, context: PrismaContext) => {
+        return context.prisma.user.findUnique({ where: { id: args.id } });
+      },
+    },
+    profiles: {
+      type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(ProfileType))),
+      resolve: (_, _args, context: PrismaContext) => {
+        return context.prisma.profile.findMany();
+      },
+    },
+    profile: {
+      type: new GraphQLNonNull(ProfileType),
+      resolve: (_, args: { id: UUID }, context: PrismaContext) => {
+        return context.prisma.profile.findUnique({ where: { id: args.id } });
       },
     },
   },
