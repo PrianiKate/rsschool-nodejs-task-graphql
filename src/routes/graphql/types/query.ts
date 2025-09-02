@@ -17,7 +17,7 @@ export const RootQueryType = new GraphQLObjectType({
       },
     },
     memberType: {
-      type: new GraphQLNonNull(MemberType),
+      type: MemberType,
       args: { id: { type: new GraphQLNonNull(MemberTypeId) } },
       resolve: (_, args: { id: string }, context: PrismaContext) => {
         return context.prisma.memberType.findUnique({ where: { id: args.id } });
@@ -30,7 +30,7 @@ export const RootQueryType = new GraphQLObjectType({
       },
     },
     post: {
-      type: new GraphQLNonNull(PostType),
+      type: PostType,
       args: { id: { type: new GraphQLNonNull(UUIDType) } },
       resolve: (_, args: { id: UUID }, context: PrismaContext) => {
         return context.prisma.post.findUnique({ where: { id: args.id } });
@@ -43,7 +43,8 @@ export const RootQueryType = new GraphQLObjectType({
       },
     },
     user: {
-      type: new GraphQLNonNull(UserType),
+      type: UserType,
+      args: { id: { type: new GraphQLNonNull(UUIDType) } },
       resolve: (_, args: { id: UUID }, context: PrismaContext) => {
         return context.prisma.user.findUnique({ where: { id: args.id } });
       },
@@ -55,7 +56,8 @@ export const RootQueryType = new GraphQLObjectType({
       },
     },
     profile: {
-      type: new GraphQLNonNull(ProfileType),
+      type: ProfileType,
+      args: { id: { type: new GraphQLNonNull(UUIDType) } },
       resolve: (_, args: { id: UUID }, context: PrismaContext) => {
         return context.prisma.profile.findUnique({ where: { id: args.id } });
       },
