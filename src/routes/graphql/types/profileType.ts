@@ -1,10 +1,12 @@
-import {
-  GraphQLBoolean,
-  GraphQLInt,
-  GraphQLNonNull,
-  GraphQLObjectType,
-} from 'graphql';
+import { GraphQLBoolean, GraphQLInt, GraphQLNonNull, GraphQLObjectType } from 'graphql';
 import { UUIDType } from './uuid.js';
+import { PrismaContext } from './prismaContext.js';
+import { MemberType } from './memberType.js';
+
+interface Profile {
+  userId: string;
+  memberTypeId: string;
+}
 
 export const ProfileType = new GraphQLObjectType({
   name: 'ProfileType',
@@ -12,7 +14,13 @@ export const ProfileType = new GraphQLObjectType({
     id: { type: new GraphQLNonNull(UUIDType) },
     isMale: { type: new GraphQLNonNull(GraphQLBoolean) },
     yearOfBirth: { type: new GraphQLNonNull(GraphQLInt) },
-    userId: { type: new GraphQLNonNull(UUIDType) },
-    memberTypeId: { type: new GraphQLNonNull(UUIDType) },
+    memberType: {
+      type: MemberType,
+      resolve: (parent: Profile, _args, context: PrismaContext) => {
+        return context.prisma.memberType.findUnique({
+          where: { id: parent.memberTypeId },
+        });
+      },
+    },
   },
 });
