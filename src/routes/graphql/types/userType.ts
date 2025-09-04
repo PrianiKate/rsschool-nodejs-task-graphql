@@ -1,4 +1,5 @@
 import {
+  GraphQLFieldConfigMap,
   GraphQLFloat,
   GraphQLList,
   GraphQLNonNull,
@@ -12,7 +13,7 @@ import { PostType } from './postType.js';
 
 export const UserType = new GraphQLObjectType({
   name: 'UserType',
-  fields: () => ({
+  fields: (): GraphQLFieldConfigMap<{ id: string }, PrismaContext> => ({
     id: { type: new GraphQLNonNull(UUIDType) },
     name: { type: new GraphQLNonNull(GraphQLString) },
     balance: { type: new GraphQLNonNull(GraphQLFloat) },
