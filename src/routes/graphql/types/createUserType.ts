@@ -1,10 +1,15 @@
-import { GraphQLInputObjectType, GraphQLInt, GraphQLNonNull, GraphQLString } from "graphql";
+import {
+  GraphQLFloat,
+  GraphQLInputObjectType,
+  GraphQLNonNull,
+  GraphQLString,
+} from 'graphql';
 
-export const CreateUserType = new GraphQLInputObjectType({
-  name: 'CreateUserType',
+export const CreateUserInput = new GraphQLInputObjectType({
+  name: 'CreateUserInput',
   fields: {
     name: { type: new GraphQLNonNull(GraphQLString) },
-    balance: { type: new GraphQLNonNull(GraphQLInt) },
+    balance: { type: new GraphQLNonNull(GraphQLFloat) },
   },
 });
 

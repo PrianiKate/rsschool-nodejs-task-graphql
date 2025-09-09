@@ -1,8 +1,8 @@
 import { GraphQLInputObjectType, GraphQLNonNull, GraphQLString } from 'graphql';
 import { UUIDType } from './uuid.js';
 
-export const CreatePostType = new GraphQLInputObjectType({
-  name: 'CreatePostType',
+export const CreatePostInput = new GraphQLInputObjectType({
+  name: 'CreatePostInput',
   fields: {
     title: { type: new GraphQLNonNull(GraphQLString) },
     content: { type: new GraphQLNonNull(GraphQLString) },
