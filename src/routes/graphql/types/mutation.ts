@@ -8,6 +8,9 @@ import { ProfileType } from './profileType.js';
 import { CreateProfileProps, CreateProfileInput } from './createProfileType.js';
 import { UUIDType } from './uuid.js';
 import { UUID } from 'crypto';
+import { ChangePostInput, ChangePostProps } from './changePostType.js';
+import { ChangeUserInput, ChangeUserProps } from './changeUserType.js';
+import { ChangeProfileInput, ChangeProfileProps } from './ChangeProfileType.js';
 
 export const RootMutationType = new GraphQLObjectType({
   name: 'RootMutationType',
@@ -61,6 +64,48 @@ export const RootMutationType = new GraphQLObjectType({
       resolve: async (_parent, args: { id: UUID }, context: PrismaContext) => {
         await context.prisma.profile.delete({ where: { id: args.id } });
         return 'Success';
+      },
+    },
+    changePost: {
+      type: PostType,
+      args: {
+        id: { type: new GraphQLNonNull(UUIDType) },
+        dto: { type: new GraphQLNonNull(ChangePostInput) },
+      },
+      resolve: (
+        _parent,
+        args: { id: UUID; dto: ChangePostProps },
+        context: PrismaContext,
+      ) => {
+        return context.prisma.post.update({ where: { id: args.id }, data: args.dto });
+      },
+    },
+    changeUser: {
+      type: UserType,
+      args: {
+        id: { type: new GraphQLNonNull(UUIDType) },
+        dto: { type: new GraphQLNonNull(ChangeUserInput) },
+      },
+      resolve: (
+        _parent,
+        args: { id: UUID; dto: ChangeUserProps },
+        context: PrismaContext,
+      ) => {
+        return context.prisma.user.update({ where: { id: args.id }, data: args.dto });
+      },
+    },
+    changeProfile: {
+      type: ProfileType,
+      args: {
+        id: { type: new GraphQLNonNull(UUIDType) },
+        dto: { type: new GraphQLNonNull(ChangeProfileInput) },
+      },
+      resolve: (
+        _parent,
+        args: { id: UUID; dto: ChangeProfileProps },
+        context: PrismaContext,
+      ) => {
+        return context.prisma.profile.update({ where: { id: args.id }, data: args.dto });
       },
     },
   },
