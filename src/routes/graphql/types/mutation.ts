@@ -10,7 +10,12 @@ import { UUIDType } from './uuid.js';
 import { UUID } from 'crypto';
 import { ChangePostInput, ChangePostProps } from './changePostType.js';
 import { ChangeUserInput, ChangeUserProps } from './changeUserType.js';
-import { ChangeProfileInput, ChangeProfileProps } from './ChangeProfileType.js';
+import { ChangeProfileInput, ChangeProfileProps } from './changeProfileType.js';
+
+export interface SubsProps {
+  userId: string;
+  authorId: string;
+}
 
 export const RootMutationType = new GraphQLObjectType({
   name: 'RootMutationType',
@@ -106,6 +111,45 @@ export const RootMutationType = new GraphQLObjectType({
         context: PrismaContext,
       ) => {
         return context.prisma.profile.update({ where: { id: args.id }, data: args.dto });
+      },
+    },
+    subscribeTo: {
+      type: new GraphQLNonNull(GraphQLString),
+      args: {
+        userId: { type: new GraphQLNonNull(UUIDType) },
+        authorId: { type: new GraphQLNonNull(UUIDType) },
+      },
+      resolve: async (
+        _parent,
+        { userId, authorId }: SubsProps,
+        context: PrismaContext,
+      ) => {
+        await context.prisma.subscribersOnAuthors.create({
+          data: { subscriberId: userId, authorId },
+        });
+        return 'Success';
+      },
+    },
+    unsubscribeFrom: {
+      type: new GraphQLNonNull(GraphQLString),
+      args: {
+        userId: { type: new GraphQLNonNull(UUIDType) },
+        authorId: { type: new GraphQLNonNull(UUIDType) },
+      },
+      resolve: async (
+        _parent,
+        { userId, authorId }: SubsProps,
+        context: PrismaContext,
+      ) => {
+        await context.prisma.subscribersOnAuthors.delete({
+          where: {
+            subscriberId_authorId: {
+              subscriberId: userId,
+              authorId,
+            },
+          },
+        });
+        return 'Success';
       },
     },
   },
