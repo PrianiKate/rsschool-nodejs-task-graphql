@@ -23,28 +23,42 @@ export const RootMutationType = new GraphQLObjectType({
     createPost: {
       type: new GraphQLNonNull(PostType),
       args: { dto: { type: new GraphQLNonNull(CreatePostInput) } },
-      resolve: (_parent, args: { dto: CreatePostProps }, context: PrismaContext) => {
-        return context.prisma.post.create({
+      resolve: async (
+        _parent,
+        args: { dto: CreatePostProps },
+        context: PrismaContext,
+      ) => {
+        const post = await context.prisma.post.create({
           data: args.dto,
         });
+        context.loaders.postLoader.prime(post.authorId, post);
+        return post;
       },
     },
     createUser: {
       type: new GraphQLNonNull(UserType),
       args: { dto: { type: new GraphQLNonNull(CreateUserInput) } },
-      resolve: (_parent, args: { dto: CreateUserProps }, context: PrismaContext) => {
-        return context.prisma.user.create({
+      resolve: async (
+        _parent,
+        args: { dto: CreateUserProps },
+        context: PrismaContext,
+      ) => {
+        const user = await context.prisma.user.create({
           data: args.dto,
         });
+        context.loaders.userLoader.prime(user.id, user);
+        return user;
       },
     },
     createProfile: {
       type: new GraphQLNonNull(ProfileType),
       args: { dto: { type: new GraphQLNonNull(CreateProfileInput) } },
-      resolve: (_parent, args: { dto: CreateProfileProps }, context: PrismaContext) => {
-        return context.prisma.profile.create({
+      resolve: async (_parent, args: { dto: CreateProfileProps }, context: PrismaContext) => {
+        const profile = await context.prisma.profile.create({
           data: args.dto,
         });
+        context.loaders.profileLoader.prime(profile.userId, profile);
+        return profile;
       },
     },
     deletePost: {

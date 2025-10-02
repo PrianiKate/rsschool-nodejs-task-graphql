@@ -1,17 +1,15 @@
-import { PrismaClient } from '@prisma/client';
-import {
-  memberTypeLoader,
-  postLoader,
-  profileLoader,
-  userLoader,
-} from './dataLoaders.js';
+import { MemberType, Post, PrismaClient, Profile, User } from '@prisma/client';
+import DataLoader from 'dataloader';
 
 export interface PrismaContext {
   prisma: PrismaClient;
   loaders: {
-    memberTypeLoader: typeof memberTypeLoader;
-    userLoader: typeof userLoader;
-    postLoader: typeof postLoader;
-    profileLoader: typeof profileLoader;
+    memberTypeLoader: DataLoader<string, MemberType>;
+    userLoader: DataLoader<
+      string,
+      User & { userSubscribedTo?: User; subscribedToUser?: User }
+    >;
+    postLoader: DataLoader<string, Post>;
+    profileLoader: DataLoader<string, Profile>;
   };
 }
